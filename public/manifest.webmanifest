@@ -1,0 +1,20 @@
+{
+  "name": "Hospifava – Apps de salud del Hospital Dr. René Favaloro",
+  "short_name": "Hospifava",
+  "description": "Las apps de salud del Hospital Dr. René Favaloro: CardioSegui, NutriSegui y MamaSegui.",
+  "lang": "es-AR",
+  "dir": "ltr",
+  "id": "./",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f4f6f9",
+  "theme_color": "#ffffff",
+  "categories": ["health", "medical"],
+  "icons": [
+    { "src": "icons/icon-192.png",          "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png",          "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
