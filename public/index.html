@@ -176,6 +176,86 @@
 
     .pie { margin-top: 18px; text-align: center; font-size: 13px; color: var(--texto-suave); }
 
+    /* =========================================================
+       NOMBRE DEL PACIENTE (saludo en el encabezado + diálogo)
+       Compartido con todas las apps de Hospifava.
+       ========================================================= */
+    .saludo {
+      margin-left: auto;
+      max-width: 58%;
+      min-height: 40px;
+      padding: 6px 12px;
+      border: none;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.2);
+      color: var(--blanco);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font: inherit;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .saludo span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .marca > svg { flex-shrink: 0; }   /* el ícono de la app no se achica si el nombre es largo */
+    .marca .saludo svg { width: 16px; height: 16px; flex-shrink: 0; }
+    .saludo:active { background: rgba(255, 255, 255, 0.32); }
+    .saludo:focus-visible { outline: 3px solid var(--blanco); outline-offset: 2px; }
+
+    .dialogo-nombre {
+      width: min(92vw, 420px);
+      margin: auto;
+      padding: 22px;
+      border: none;
+      border-radius: 22px;
+      box-shadow: 0 10px 40px rgba(36, 44, 79, 0.25);
+      color: var(--texto);
+    }
+
+    .dialogo-nombre::backdrop { background: rgba(36, 44, 79, 0.45); }
+    .dialogo-nombre h2 { font-size: 22px; }
+    .dialogo-nombre label { display: block; margin-top: 16px; }
+    .dialogo-nombre label > span { display: block; font-weight: 600; margin-bottom: 6px; }
+
+    .dialogo-nombre input {
+      width: 100%;
+      min-height: 54px;
+      padding: 10px 14px;
+      border: 2px solid var(--borde);
+      border-radius: 14px;
+      font: inherit;
+      font-size: 18px;
+      color: var(--texto);
+    }
+
+    .dialogo-nombre input:focus { outline: none; border-color: var(--primario); box-shadow: 0 0 0 3px var(--primario-claro); }
+    .dialogo-nombre .nota { margin-top: 12px; font-size: 14px; color: var(--texto-suave); }
+    .dialogo-nombre .acciones { display: flex; flex-direction: column; gap: 4px; margin-top: 18px; }
+
+    .dialogo-nombre .guardar {
+      min-height: 54px;
+      border: none;
+      border-radius: 16px;
+      background: var(--primario);
+      color: var(--blanco);
+      font: inherit;
+      font-size: 18px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .dialogo-nombre .cancelar {
+      min-height: 46px;
+      border: none;
+      background: none;
+      color: var(--texto-suave);
+      font: inherit;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
     [hidden] { display: none !important; }
 
     @media (max-width: 360px) {
@@ -208,6 +288,11 @@
           <path d="M12 8v8M8 12h8"/>
         </svg>
         Hospifava
+        <!-- Saludo con el nombre del paciente (al tocarlo se edita el nombre) -->
+        <button type="button" class="saludo" id="btn-saludo" aria-label="Editar tu nombre">
+          <span id="texto-saludo">Agregá tu nombre</span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4z"/></svg>
+        </button>
       </div>
       <h1>Tus apps de salud</h1>
       <p>Elegí con qué querés seguir hoy</p>
@@ -291,7 +376,76 @@
 
   </div>
 
+  <!-- ===================== TU NOMBRE ===================== -->
+  <!-- El nombre se comparte con todas las apps de Hospifava (mismo sitio). -->
+  <dialog class="dialogo-nombre" id="dialogo-nombre" aria-labelledby="dialogo-nombre-titulo">
+    <form method="dialog">
+      <h2 id="dialogo-nombre-titulo">Tu nombre</h2>
+      <label>
+        <span>¿Cómo te llamás?</span>
+        <input id="input-nombre-paciente" type="text" maxlength="40" autocomplete="given-name" placeholder="Ej: María">
+      </label>
+      <p class="nota">Se guarda solo en este celular y lo usan todas las apps de Hospifava.</p>
+      <div class="acciones">
+        <button class="guardar" value="guardar">Guardar</button>
+        <button class="cancelar" value="cancelar" formnovalidate>Cancelar</button>
+      </div>
+    </form>
+  </dialog>
+
   <script>
+    // =========================================================
+    // NOMBRE DEL PACIENTE (compartido con todas las apps)
+    // =========================================================
+    // Se guarda en "hospifava.paciente", una clave COMPARTIDA: todas las apps de
+    // Hospifava están en el mismo sitio, así que leen y escriben el mismo dato.
+    const CLAVE_PACIENTE = "hospifava.paciente";
+
+    function leerPaciente() {
+      try { const v = JSON.parse(localStorage.getItem(CLAVE_PACIENTE)); return v && typeof v === "object" ? v : {}; }
+      catch { return {}; }
+    }
+
+    const nombrePaciente = () => String(leerPaciente().nombre || "").trim();
+    const dialogoNombre = document.getElementById("dialogo-nombre");
+    const inputNombre = document.getElementById("input-nombre-paciente");
+
+    function actualizarNombres() {
+      const n = nombrePaciente();
+      document.getElementById("texto-saludo").textContent = n ? `Hola, ${n}` : "Agregá tu nombre";
+    }
+
+    function guardarNombre(nombre) {
+      try {
+        const datos = leerPaciente();
+        datos.nombre = nombre.trim().slice(0, 40);
+        localStorage.setItem(CLAVE_PACIENTE, JSON.stringify(datos));
+      } catch {
+        alert("No se pudo guardar en este celular (puede estar en modo privado).");
+      }
+      actualizarNombres();
+    }
+
+    document.getElementById("btn-saludo").addEventListener("click", () => {
+      inputNombre.value = nombrePaciente();
+      if (typeof dialogoNombre.showModal === "function") {
+        dialogoNombre.showModal();
+      } else {
+        const n = prompt("Tu nombre", nombrePaciente());   // navegadores muy viejos sin <dialog>
+        if (n !== null) guardarNombre(n);
+      }
+    });
+
+    dialogoNombre.addEventListener("close", () => {
+      if (dialogoNombre.returnValue === "guardar") guardarNombre(inputNombre.value);
+    });
+
+    // Si se cambia el nombre en otra app de Hospifava abierta en otra pestaña, se actualiza acá
+    window.addEventListener("storage", e => { if (e.key === CLAVE_PACIENTE) actualizarNombres(); });
+
+    actualizarNombres();
+
+
     // PWA: registra el service worker (solo en https; abierto como archivo no hace nada)
     if ("serviceWorker" in navigator && window.isSecureContext && location.protocol !== "file:") {
       window.addEventListener("load", () => {

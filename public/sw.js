@@ -10,7 +10,7 @@
 // Cada vez que publiques cambios en esta pantalla, subí el número de VERSION.
 // =========================================================
 
-const VERSION = "hospifava-v2";
+const VERSION = "hospifava-v3";
 
 const ARCHIVOS = [
   "./",
