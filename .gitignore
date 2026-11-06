@@ -2,3 +2,11 @@
 Thumbs.db
 desktop.ini
 .DS_Store
+
+# Dependencias de Node (se reinstalan con: npm install)
+node_modules/
+
+# Copias que arma "npm run copiar-apps" para la app de Android (cada mini-app vive en su propio repo)
+public/cardiosegui/
+public/mamasegui/
+public/capacitor.js

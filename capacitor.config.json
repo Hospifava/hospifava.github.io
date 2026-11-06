@@ -1,0 +1,11 @@
+{
+  "appId": "com.hospifava.app",
+  "appName": "HospiFava",
+  "webDir": "public",
+  "plugins": {
+    "LocalNotifications": {
+      "smallIcon": "ic_notificacion",
+      "iconColor": "#1e73be"
+    }
+  }
+}
