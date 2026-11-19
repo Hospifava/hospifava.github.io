@@ -300,10 +300,12 @@
 
     <main>
       <ul class="apps">
+        <!-- Los enlaces terminan en "index.html" a propósito: en la app de Android (Capacitor),
+             una dirección sin extensión como "/cardiosegui/" abre siempre esta pantalla de inicio. -->
 
         <!-- CardioSegui: disponible -->
         <li>
-          <a class="app-tarjeta cardio" href="/cardiosegui/">
+          <a class="app-tarjeta cardio" href="/cardiosegui/index.html">
             <div class="app-icono">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
@@ -320,7 +322,7 @@
           </a>
         </li>
 
-        <!-- NutriSegui: próximamente (cuando exista, se cambia el <div> por un <a href="/nutrisegui/">) -->
+        <!-- NutriSegui: próximamente (cuando exista, se cambia el <div> por un <a href="/nutrisegui/index.html">) -->
         <li>
           <div class="app-tarjeta nutri proximamente" aria-disabled="true">
             <div class="app-icono">
@@ -340,7 +342,7 @@
 
         <!-- MamaSegui: disponible -->
         <li>
-          <a class="app-tarjeta mama" href="/mamasegui/">
+          <a class="app-tarjeta mama" href="/mamasegui/index.html">
             <div class="app-icono">
               <!-- Cochecito de bebé -->
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
